@@ -1,0 +1,21 @@
+<web-app>
+    <!-- cat 监控 -->
+    <!-- 注：如果项目是对外不提供URL访问，比如GroupService，仅仅提供RPC服务，则不需要 -->
+
+    <servlet>
+        <servlet-name>loginServlet</servlet-name>
+        <servlet-class>com.tomcat.servlet.LoginServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>loginServlet</servlet-name>
+        <url-pattern>/login.action</url-pattern>
+    </servlet-mapping>
+
+    <!-- 类似下面这些静态资源映射关系，请在tomcat/conf/web.xml里全局配置 <servlet-mapping> <servlet-name>default</servlet-name>
+        <url-pattern>*.html</url-pattern> </servlet-mapping> <servlet-mapping> <servlet-name>ssi</servlet-name>
+        <url-pattern>*.shtml</url-pattern> </servlet-mapping> -->
+
+    <!-- 400、等动态转controller -->
+
+</web-app>
