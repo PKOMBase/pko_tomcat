@@ -11,6 +11,7 @@ import java.net.Socket;
  * 
  * web服务器核心server类
  * 
+ * 
  * @author sunjie at 2017年1月31日
  *
  */
@@ -51,9 +52,8 @@ public class Server {
             OutputStream outputStream = socket.getOutputStream();
             String result = "<html><h1>1.4.1</h1></html>";
             PrintStream writer = new PrintStream(outputStream);
-            writer.println("HTTP/1.0 200 OK");// 返回应答消息,并结束应答
+            writer.println("HTTP/1.1 200 OK");// 返回应答消息,并结束应答
             writer.println("Content-Type:text/html;charset=UTF-8");
-            writer.println("Content-Length:" + result.length());// 返回内容字节数
             writer.println();// 根据 HTTP 协议, 空行将结束头信息
             writer.print(result);
             writer.close();
