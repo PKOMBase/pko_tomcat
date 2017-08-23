@@ -7,64 +7,54 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * 
- * web服务器核心server类
- * 
- * 
- * @author sunjie at 2017年1月31日
- *
- */
 public class Server {
 
     private static int port = 8080;
 
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
+
         Socket socket = null;
+
         try {
-            // new一个http的socket服务
             serverSocket = new ServerSocket(port);
 
-            System.out.println("web服务器初始化成功");
+            System.out.println("web服务器初始化完成");
             System.out.println("等待请求...");
 
-            // 监听客户端socket的请求，并返回socket对象
+            // 监听客户端请求
             socket = serverSocket.accept();
-            // socket中的输入管道流
+            // 获取请求信息
             InputStream inputStream = socket.getInputStream();
 
-            /** 处理请求 */
-            // 将通道中的数据读取到bytes中
             byte[] bytes = new byte[1024];
             int length = inputStream.read(bytes);
-            // 将请求信息打印
             if (length > 0) {
                 String msg = new String(bytes, 0, length);
-                System.out.println("==msg==" + msg + "====");
-                // 解析信息 uri
-                // 解析信息 参数
-                // 处理请求
+                System.out.println("==msg==" + msg);
+                // 解析：uri、参数
+                // 分发处理
             }
 
-            /** 返回信息 */
-            // socket中的输出管道流
+            // 响应
             OutputStream outputStream = socket.getOutputStream();
-            String result = "<html><h1>1.4.1</h1></html>";
+            String result = "<html><h1>hello world</h1></html>";
+
             PrintStream writer = new PrintStream(outputStream);
-            writer.println("HTTP/1.1 200 OK");// 返回应答消息,并结束应答
+            writer.println("HTTP/1.1 200 OK");
             writer.println("Content-Type:text/html;charset=UTF-8");
-            writer.println();// 根据 HTTP 协议, 空行将结束头信息
+            writer.println();
+
             writer.print(result);
+
             writer.close();
+
             outputStream.flush();
             outputStream.close();
-
             socket.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            // 关闭socket服务
             try {
                 serverSocket.close();
             } catch (IOException e) {
@@ -73,5 +63,4 @@ public class Server {
         }
 
     }
-
 }
