@@ -3,7 +3,6 @@ package com.tomcat.v2.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -80,34 +79,19 @@ class ServerRunnable extends Thread {
     public void run() {
         // socket中的输入管道流
         InputStream inputStream;
+        HttpRequest request;
+        HttpResponse response;
         try {
+            // 请求
             inputStream = socket.getInputStream();
+            request = new HttpRequest(inputStream);
 
-            /** 处理请求 */
-            // 将通道中的数据读取到bytes中
-            byte[] bytes = new byte[1024];
-            int length = inputStream.read(bytes);
-            // 将请求信息打印
-            if (length > 0) {
-                String msg = new String(bytes, 0, length);
-                System.out.println("==msg==" + msg + "====");
-                // 解析信息 uri
-                // 解析信息 参数
-                // 处理请求
-            }
+            // 处理
 
-            /** 返回信息 */
-            // socket中的输出管道流
+            // 响应
             OutputStream outputStream = socket.getOutputStream();
-            String result = "<html><h1>1.4.1</h1></html>";
-            PrintStream writer = new PrintStream(outputStream);
-            writer.println("HTTP/1.1 200 OK");// 返回应答消息,并结束应答
-            writer.println("Content-Type:text/html;charset=UTF-8");
-            writer.println();// 根据 HTTP 协议, 空行将结束头信息
-            writer.print(result);
-            writer.close();
-            outputStream.flush();
-            outputStream.close();
+            response = new HttpResponse(outputStream);
+            response.write("<html><h1>hello world</h1></html>");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
