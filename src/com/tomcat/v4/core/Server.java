@@ -1,4 +1,4 @@
-package com.tomcat.v3.core;
+package com.tomcat.v4.core;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,11 +98,22 @@ class ServerRunnable extends Thread {
             }
             // 动态
             else {
-                if ("/login.action".equals(uri)) {
-                    response.write("<html><h1>hello world</h1></html>");
-                } else {
-                    response.write("<html><h1>找不到请求</h1></html>");
-                }
+                // // 通过反射获取对应的servlet对象
+                // ServletBean servletBean =
+                // Server.webXmlBean.getServletBean4Url(uri);
+                // if (servletBean == null) {
+                // System.out.println("动态资源执行失败，未找到对应servlet, uri:" + uri +
+                // "======" + Server.webXmlBean.toString());
+                // socket.close();
+                // return;
+                // }
+                // Class<?> servletClass =
+                // Class.forName(servletBean.getClassName());
+                // HttpServlet servletObject = (HttpServlet)
+                // servletClass.newInstance();
+                // servletObject.init(request, response);
+                // servletObject.service(request, response);
+                // response.write("<html><h1>hello world</h1></html>");
             }
 
         } catch (IOException e) {
