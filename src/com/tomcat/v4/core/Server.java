@@ -98,6 +98,11 @@ class ServerRunnable extends Thread {
             }
             // 动态
             else {
+                if ("/login.action".equals(uri)) {
+                    response.write("<html><h1>hello world</h1></html>");
+                } else {
+                    response.write("<html><h1>找不到请求</h1></html>");
+                }
                 // // 通过反射获取对应的servlet对象
                 // ServletBean servletBean =
                 // Server.webXmlBean.getServletBean4Url(uri);
