@@ -4,7 +4,7 @@
 
     <servlet>
         <servlet-name>loginServlet</servlet-name>
-        <servlet-class>com.tomcat.servlet.LoginServlet</servlet-class>
+        <servlet-class>com.tomcat.v4.servlet.LoginServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

@@ -13,8 +13,11 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception {
         System.out.println("执行登录:" + httpRequest.paramMap);
-        String login = (String) httpRequest.getParameter("login");
-        String passport = (String) httpRequest.getParameter("passport");
+        String login = (String) httpRequest.getAttribute("login");
+        String passport = (String) httpRequest.getAttribute("passport");
+        if (null == login || null == passport) {
+            throw new Exception("请输入用户名及密码");
+        }
         if (login.equals("kid") && passport.equals("123")) {
             System.out.println("登录成功");
             httpResponse.write4File("/html/loginSuccess.html");
