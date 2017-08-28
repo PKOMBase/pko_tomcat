@@ -9,6 +9,11 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.tomcat.v4.servlet.HttpServlet;
+import com.tomcat.v4.webxml.WebXml;
+import com.tomcat.v4.webxml.bean.ServletBean;
+import com.tomcat.v4.webxml.bean.WebXmlBean;
+
 /**
  * 
  * web服务器核心server类
@@ -20,6 +25,9 @@ import java.util.concurrent.TimeUnit;
 public class Server {
 
     private static int port = 8080;
+
+    // 解析web.xml
+    public static WebXmlBean webXmlBean = WebXml.getWebXmlBean();
 
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
@@ -98,30 +106,20 @@ class ServerRunnable extends Thread {
             }
             // 动态
             else {
-                if ("/login.action".equals(uri)) {
-                    response.write("<html><h1>hello world</h1></html>");
-                } else {
-                    response.write("<html><h1>找不到请求</h1></html>");
+                // 通过反射获取对应的servlet对象
+                ServletBean servletBean = Server.webXmlBean.getServletBean4Url(uri);
+                if (servletBean == null) {
+                    System.out.println("动态资源执行失败，未找到对应servlet, uri:" + uri + "======" + Server.webXmlBean.toString());
+                    socket.close();
+                    return;
                 }
-                // // 通过反射获取对应的servlet对象
-                // ServletBean servletBean =
-                // Server.webXmlBean.getServletBean4Url(uri);
-                // if (servletBean == null) {
-                // System.out.println("动态资源执行失败，未找到对应servlet, uri:" + uri +
-                // "======" + Server.webXmlBean.toString());
-                // socket.close();
-                // return;
-                // }
-                // Class<?> servletClass =
-                // Class.forName(servletBean.getClassName());
-                // HttpServlet servletObject = (HttpServlet)
-                // servletClass.newInstance();
-                // servletObject.init(request, response);
-                // servletObject.service(request, response);
-                // response.write("<html><h1>hello world</h1></html>");
+                Class<?> servletClass = Class.forName(servletBean.getClassName());
+                HttpServlet servletObject = (HttpServlet) servletClass.newInstance();
+                servletObject.init(request, response);
+                servletObject.service(request, response);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {

@@ -2,6 +2,8 @@ package com.tomcat.v4.core;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpRequest {
 
@@ -9,8 +11,14 @@ public class HttpRequest {
 
     private String uri;
 
+    public Map<String, Object> paramMap = new HashMap<String, Object>();
+
     public String getUri() {
         return uri;
+    }
+
+    public Object getParameter(String key) {
+        return paramMap.get(key);
     }
 
     public HttpRequest(final InputStream inputStream) throws IOException {
@@ -36,7 +44,14 @@ public class HttpRequest {
             this.uri = msg.substring(beginIndex, endIndex);
 
             // 解析信息 参数
-            // 处理请求
+            String paramString = msg.substring(msg.lastIndexOf("\n") + 1);
+            String[] params = paramString.split("&");
+            for (String param : params) {
+                String[] paramArray = param.split("=");
+                if (paramArray.length >= 2) {
+                    paramMap.put(paramArray[0], paramArray[1]);
+                }
+            }
         }
 
     }
